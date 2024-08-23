@@ -51,4 +51,4 @@ def show():
     typer.echo(f"Working Root Directory: {working_root_directory}")
 
 if __name__ == "__main__":
-    app(prog_name="mcdev")
+    app(prog_name="wrappit")

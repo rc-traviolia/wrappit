@@ -3,7 +3,7 @@ from pathlib import Path
 from wrappit.enums.mctype import MCType
 from wrappit.models.working_object import WorkingObject
 
-CONFIG_FILE = Path("mcdev/config.json")
+CONFIG_FILE = Path("wrappit/config.json")
 
 class ConfigHelper:
     def __init__(self):
