@@ -18,21 +18,32 @@ def print_directory_structure():
         
         entries = sorted(os.listdir(path))
         
-        for index, entry in enumerate(entries):
+        # Separate files and directories
+        files = [entry for entry in entries if os.path.isfile(os.path.join(path, entry))]
+        directories = [entry for entry in entries if os.path.isdir(os.path.join(path, entry))]
+        
+        # Print files first
+        for index, entry in enumerate(files):
+            full_path = os.path.join(path, entry)
+            
+            if gitignore_parser and not gitignore_parser(full_path):
+                connector = '└── ' if index == len(files) - 1 and not directories else '├── '
+                entry_color = Fore.BLUE
+                print(f"{prefix}{connector}{entry_color}{entry}")
+        
+        # Print directories
+        for index, entry in enumerate(directories):
             full_path = os.path.join(path, entry)
 
             # Explicitly check for '.git' directory to include it in the results
             if gitignore_parser and (entry == '.git' or gitignore_parser(full_path)):
                 continue
             
-            connector = '└── ' if index == len(entries) - 1 else '├── '
-            entry_color = Fore.YELLOW if os.path.isdir(full_path) else Fore.BLUE
-            if os.path.isdir(full_path):
-                print(f"{prefix}{connector}{entry_color}{entry}/")
-                new_prefix = prefix + ('    ' if index == len(entries) - 1 else '│   ')
-                print_tree(full_path, gitignore_parser, new_prefix)
-            else:
-                print(f"{prefix}{connector}{entry_color}{entry}")
+            connector = '└── ' if index == len(directories) - 1 else '├── '
+            entry_color = Fore.YELLOW
+            print(f"{prefix}{connector}{entry_color}{entry}/")
+            new_prefix = prefix + ('    ' if index == len(directories) - 1 else '│   ')
+            print_tree(full_path, gitignore_parser, new_prefix)
     
     executing_directory = os.getcwd()
     gitignore_parser = load_gitignore_patterns(executing_directory)
